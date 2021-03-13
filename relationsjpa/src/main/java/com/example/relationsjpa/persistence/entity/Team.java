@@ -28,4 +28,16 @@ public class Team {
 
     @OneToMany(mappedBy = "team")
     private List<Student> students;
+
+    @ManyToMany(mappedBy = "teams")
+    private List<Professor> professors;
+
+    @Override
+    public String toString() {
+        return "Team{" +
+                "id=" + id +
+                ", year=" + year +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

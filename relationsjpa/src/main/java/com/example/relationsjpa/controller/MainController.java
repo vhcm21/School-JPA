@@ -1,8 +1,10 @@
 package com.example.relationsjpa.controller;
 
 import com.example.relationsjpa.command.MentorDto;
+import com.example.relationsjpa.command.ProfessorDto;
 import com.example.relationsjpa.command.StudentDto;
 import com.example.relationsjpa.persistence.entity.Mentor;
+import com.example.relationsjpa.persistence.entity.Professor;
 import com.example.relationsjpa.persistence.entity.Student;
 import com.example.relationsjpa.persistence.entity.Team;
 import com.example.relationsjpa.service.MainService;
@@ -43,5 +45,13 @@ public class MainController {
         MentorDto createdMentor = mainService.createMentor(mentorToCreate, studentId);
 
         return new ResponseEntity<>(createdMentor, HttpStatus.CREATED);
+    }
+
+    @PostMapping("teams/{teamId}/professors")
+    public ResponseEntity<ProfessorDto> createProfessor(@PathVariable Long teamId,
+                                                        @RequestBody Professor professorToCreate) {
+        ProfessorDto createdProfessor = mainService.createProfessor(professorToCreate, teamId);
+
+        return new ResponseEntity<>(createdProfessor, HttpStatus.CREATED);
     }
 }

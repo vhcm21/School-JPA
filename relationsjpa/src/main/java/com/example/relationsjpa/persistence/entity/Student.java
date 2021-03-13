@@ -31,4 +31,15 @@ public class Student {
 
     @OneToOne(mappedBy = "student")
     private Mentor mentor;
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", team=" + team.getId() +
+                ", mentor=" + mentor.getId() +
+                '}';
+    }
 }

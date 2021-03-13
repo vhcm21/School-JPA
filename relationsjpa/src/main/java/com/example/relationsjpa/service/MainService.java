@@ -1,31 +1,39 @@
 package com.example.relationsjpa.service;
 
 import com.example.relationsjpa.command.MentorDto;
+import com.example.relationsjpa.command.ProfessorDto;
 import com.example.relationsjpa.command.StudentDto;
 import com.example.relationsjpa.persistence.entity.Mentor;
+import com.example.relationsjpa.persistence.entity.Professor;
 import com.example.relationsjpa.persistence.entity.Student;
 import com.example.relationsjpa.persistence.entity.Team;
 import com.example.relationsjpa.persistence.repository.MentorRepository;
+import com.example.relationsjpa.persistence.repository.ProfessorRepository;
 import com.example.relationsjpa.persistence.repository.StudentRepository;
 import com.example.relationsjpa.persistence.repository.TeamRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class MainService {
 
+    private final ProfessorRepository professorRepository;
     private final StudentRepository studentRepository;
     private final TeamRepository teamRepository;
     private final MentorRepository mentorRepository;
 
-    public MainService(StudentRepository studentRepository, TeamRepository teamRepository, MentorRepository mentorRepository) {
+    public MainService(StudentRepository studentRepository, TeamRepository teamRepository, MentorRepository mentorRepository,
+                       ProfessorRepository professorRepository) {
         this.studentRepository = studentRepository;
         this.teamRepository = teamRepository;
         this.mentorRepository = mentorRepository;
+        this.professorRepository = professorRepository;
     }
 
     public Team createTeam(Team teamToCreate) {
-        Team createdTeam = teamRepository.save(teamToCreate);
 
+        Team createdTeam = teamRepository.save(teamToCreate);
         return createdTeam;
     }
 
@@ -49,18 +57,11 @@ public class MainService {
     }
 
     public MentorDto createMentor(Mentor mentorToCreate, Long studentId) {
-        System.out.println("YEAHHHHHHHHHHHH");
-        System.out.println(studentId);
-
-        System.out.println(studentRepository.existsById(studentId));
 
         Student student = studentRepository.findById(studentId).orElse(null);
 
         if (student != null) {
 
-            System.out.println(student);
-
-            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
             mentorToCreate.setStudent(student);
 
             Mentor createdMentor = mentorRepository.save(mentorToCreate);
@@ -73,7 +74,27 @@ public class MainService {
                     .build();
         }
 
-        System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+        return null;
+    }
+
+    public ProfessorDto createProfessor(Professor professorToCreate, Long teamId) {
+
+        Team team = teamRepository.findById(teamId).orElse(null);
+        if (team != null) {
+
+            professorToCreate.setTeams(new ArrayList<Team>());
+
+            professorToCreate.getTeams().add(team);
+
+            Professor createdProfessor = professorRepository.save(professorToCreate);
+
+            return ProfessorDto.builder()
+                    .id(createdProfessor.getId())
+                    .name(createdProfessor.getName())
+                    .age(createdProfessor.getAge())
+                    .teamId(team.getId())
+                    .build();
+        }
 
         return null;
     }
